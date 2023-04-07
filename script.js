@@ -8,7 +8,8 @@ const playOrPauseBtnEl = document.querySelector("#playOrPause");
 const forwardBtnEl = document.querySelector("#forward");
 const audioEl = document.querySelector("#audio");
 const playerEl = document.querySelector(".player-container");
-const progressBarCurrent = document.querySelector(".progress-bar__current");
+const progressBarEl = document.querySelector(".progress-bar");
+const progressBarCurrentEl = document.querySelector(".progress-bar__current");
 
 const musicData = {
   0: {
@@ -100,13 +101,12 @@ audioEl.addEventListener("loadeddata", function () {
 audioEl.addEventListener("timeupdate", function (e) {
   const { duration, currentTime } = e.srcElement;
   if (duration) {
-    durationCurrentEl.textContent = `${Math.trunc(
-      currentTime / 60
-    )}:${Math.trunc(this.currentTime % 60)
+    let minutes = Math.trunc(currentTime / 60);
+    let seconds = Math.trunc(this.currentTime % 60)
       .toString()
-      .padStart(2, "0")}`;
-
-    progressBarCurrent.style.width = `${(currentTime / duration) * 100}%`;
+      .padStart(2, "0");
+    durationCurrentEl.textContent = `${minutes}:${seconds}`;
+    progressBarCurrentEl.style.width = `${(currentTime / duration) * 100}%`;
   }
 });
 
@@ -115,4 +115,11 @@ audioEl.addEventListener("ended", function () {
   progressBarCurrent.style.width = `0%`;
   playStatus = false;
   playOrPauseBtnEl.children[0].setAttribute("href", `./sprites/solid.svg#play`);
+});
+
+progressBarEl.addEventListener("click", function (e) {
+  let progressBarCurrent = (e.offsetX / this.clientWidth) * audioEl.duration;
+  audioEl.currentTime = progressBarCurrent;
+  playAudio();
+  playStatus = true;
 });
