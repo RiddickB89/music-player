@@ -15,17 +15,14 @@ const musicData = {
   0: {
     title: "Abstract Fashion Pop",
     author: "QubeSounds",
-    img: "jacinto-1",
   },
   1: {
     title: "Ambient Classical Guitar",
     author: "William King",
-    img: "jacinto-2",
   },
   2: {
     title: "Taking Our Time",
     author: "Alex Grohl",
-    img: "jacinto-3",
   },
 };
 
@@ -39,6 +36,7 @@ const titleLength = function () {
 };
 
 (function () {
+  audioEl.setAttribute("src", `./music/abstract-fashion-pop.mp3`);
   imgEl.setAttribute("src", "./img/jacinto-0.jpg");
   titleEl.textContent = `${musicData[0].title}`;
   authorEl.textContent = `${musicData[0].author}`;
@@ -51,16 +49,17 @@ const playAudio = function () {
     "href",
     `./sprites/solid.svg#pause`
   );
+  playStatus = true;
 };
 
 const pauseAudio = function () {
   audioEl.pause();
   playOrPauseBtnEl.children[0].setAttribute("href", `./sprites/solid.svg#play`);
+  playStatus = false;
 };
 
 const playorPauseAudio = function () {
   !playStatus ? playAudio() : pauseAudio();
-  playStatus = !playStatus;
 };
 
 const chooseAudio = function (idNumber) {
@@ -73,7 +72,6 @@ const chooseAudio = function (idNumber) {
     `./music/${musicData[musicId].title.split(" ").join("-").toLowerCase()}.mp3`
   );
   playAudio();
-  playStatus = true;
   titleLength();
 };
 
@@ -89,17 +87,8 @@ const playPreviousAudio = function () {
     : chooseAudio(musicId - 1);
 };
 
-playOrPauseBtnEl.addEventListener("click", playorPauseAudio);
-backwardBtnEl.addEventListener("click", playPreviousAudio);
-forwardBtnEl.addEventListener("click", playNextAudio);
-audioEl.addEventListener("loadeddata", function () {
-  durationEl.textContent = `${Math.trunc(this.duration / 60)}:${Math.trunc(
-    this.duration % 60
-  )}`;
-});
-
-audioEl.addEventListener("timeupdate", function (e) {
-  const { duration, currentTime } = e.srcElement;
+const showTimeUpdate = function () {
+  const { duration, currentTime } = this;
   if (duration) {
     let minutes = Math.trunc(currentTime / 60);
     let seconds = Math.trunc(this.currentTime % 60)
@@ -108,18 +97,31 @@ audioEl.addEventListener("timeupdate", function (e) {
     durationCurrentEl.textContent = `${minutes}:${seconds}`;
     progressBarCurrentEl.style.width = `${(currentTime / duration) * 100}%`;
   }
-});
+};
 
-audioEl.addEventListener("ended", function () {
+const audioFinished = function () {
   durationCurrentEl.textContent = `0:00`;
   progressBarCurrent.style.width = `0%`;
   playStatus = false;
   playOrPauseBtnEl.children[0].setAttribute("href", `./sprites/solid.svg#play`);
-});
+};
 
-progressBarEl.addEventListener("click", function (e) {
+const chooseAudioProgress = function (e) {
   let progressBarCurrent = (e.offsetX / this.clientWidth) * audioEl.duration;
   audioEl.currentTime = progressBarCurrent;
   playAudio();
-  playStatus = true;
-});
+};
+
+const setAudioDuration = function () {
+  durationEl.textContent = `${Math.trunc(this.duration / 60)}:${Math.trunc(
+    this.duration % 60
+  )}`;
+};
+
+playOrPauseBtnEl.addEventListener("click", playorPauseAudio);
+backwardBtnEl.addEventListener("click", playPreviousAudio);
+forwardBtnEl.addEventListener("click", playNextAudio);
+audioEl.addEventListener("loadeddata", setAudioDuration);
+audioEl.addEventListener("timeupdate", showTimeUpdate);
+audioEl.addEventListener("ended", audioFinished);
+progressBarEl.addEventListener("click", chooseAudioProgress);
