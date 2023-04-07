@@ -1,13 +1,14 @@
 const imgEl = document.querySelector(".img");
 const titleEl = document.querySelector(".title");
 const authorEl = document.querySelector(".author");
-const durationActualEl = document.querySelector(".duration__actual");
-const durationLengthEl = document.querySelector(".duration__length");
+const durationCurrentEl = document.querySelector(".duration__current");
+const durationEl = document.querySelector(".duration");
 const backwardBtnEl = document.querySelector("#backward");
 const playOrPauseBtnEl = document.querySelector("#playOrPause");
 const forwardBtnEl = document.querySelector("#forward");
 const audioEl = document.querySelector("#audio");
 const playerEl = document.querySelector(".player-container");
+const progressBarCurrent = document.querySelector(".progress-bar__current");
 
 const musicData = {
   0: {
@@ -90,3 +91,28 @@ const playPreviousAudio = function () {
 playOrPauseBtnEl.addEventListener("click", playorPauseAudio);
 backwardBtnEl.addEventListener("click", playPreviousAudio);
 forwardBtnEl.addEventListener("click", playNextAudio);
+audioEl.addEventListener("loadeddata", function () {
+  durationEl.textContent = `${Math.trunc(this.duration / 60)}:${Math.trunc(
+    this.duration % 60
+  )}`;
+});
+
+audioEl.addEventListener("timeupdate", function (e) {
+  const { duration, currentTime } = e.srcElement;
+  if (duration) {
+    durationCurrentEl.textContent = `${Math.trunc(
+      currentTime / 60
+    )}:${Math.trunc(this.currentTime % 60)
+      .toString()
+      .padStart(2, "0")}`;
+
+    progressBarCurrent.style.width = `${(currentTime / duration) * 100}%`;
+  }
+});
+
+audioEl.addEventListener("ended", function () {
+  durationCurrentEl.textContent = `0:00`;
+  progressBarCurrent.style.width = `0%`;
+  playStatus = false;
+  playOrPauseBtnEl.children[0].setAttribute("href", `./sprites/solid.svg#play`);
+});

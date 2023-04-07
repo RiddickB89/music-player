@@ -104,16 +104,15 @@ body {
   margin: 0.5rem 0 1rem 0;
 }
 
-.progress-bar__actual {
+.progress-bar__current {
   background-image: linear-gradient(to right, #343a40 30%, #212529 70%);
   border-radius: 0.5rem;
   height: 0.5rem;
-  /* change this to show progress */
-  width: 66%;
+  width: 0%;
   transition: width 0.1s linear;
 }
 
-.duration {
+.duration-container {
   display: flex;
   justify-content: space-between;
 }
