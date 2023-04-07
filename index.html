@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Music Player</title>
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@300;600&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.10.2/css/all.min.css"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script defer src="script.js"></script>
+  </head>
+  <body>
+    <div class="player-container">
+      <div class="img-container">
+        <img class="img" src="./img/jacinto-1.jpg" alt="album's image" />
+      </div>
+      <h2 class="title">Waidmanns Heil</h2>
+      <h3 class="author">Sebastian Paluch</h3>
+      <div class="duration">
+        <span class="duration__actual">0:00</span>
+        <span class="duration__length">2:35</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-bar__actual"></div>
+      </div>
+      <div class="container-buttons">
+        <svg class="buttons" id="backward">
+          <use href="./sprites/solid.svg#backward"></use>
+        </svg>
+        <svg class="buttons" id="play">
+          <use href="./sprites/solid.svg#play"></use>
+        </svg>
+        <svg class="buttons" id="forward">
+          <use href="./sprites/solid.svg#forward"></use>
+        </svg>
+      </div>
+      <audio id="audio" src="./music/jacinto-1.mp3" controls hidden></audio>
+    </div>
+    <!-- Script -->
+  </body>
+</html>
